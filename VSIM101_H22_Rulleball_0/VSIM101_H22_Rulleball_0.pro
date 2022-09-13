@@ -17,6 +17,7 @@ HEADERS += \
     renderwindow.h \
     rollingball.h \
     shader.h \
+    triangle.h \
     trianglesurface.h \
     visualobject.h \
     xyz.h

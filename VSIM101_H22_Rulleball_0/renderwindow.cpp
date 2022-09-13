@@ -75,6 +75,8 @@ void RenderWindow::init()
         return;
     }
 
+
+
     //just to make sure we don't init several times
     //used in exposeEvent()
     if (!mInitialized)
@@ -169,6 +171,7 @@ void RenderWindow::render()
     // checkForGLerrors() because that takes a long time
     // and before swapBuffers(), else it will show the vsync time
     calculateFramerate();
+
 
     // using our expanded OpenGL debugger to check if everything is OK.
     // checkForGLerrors();

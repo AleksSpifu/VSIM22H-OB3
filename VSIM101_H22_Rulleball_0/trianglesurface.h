@@ -3,6 +3,7 @@
 
 #include "visualobject.h"
 #include "vector3d.h"
+#include "triangle.h"
 
 class TriangleSurface : public VisualObject
 {
@@ -18,6 +19,7 @@ public:
     void construct_cylinder();
     void construct_plane();
     std::vector<gsml::Vertex>& get_vertices() { return mVertices; } // 191120
+    Triangle GetTriangle(gsml::Vector3d location);
 };
 
 #endif // TRIANGLESURFACE_H

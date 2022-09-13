@@ -30,6 +30,24 @@ TriangleSurface::~TriangleSurface()
     //qDebug() << "TriangleSurface::~TriangleSurface() - vertices deleted";
 }
 
+Triangle TriangleSurface::GetTriangle(gsml::Vector3d location) {
+// DOES NOT WORK
+    for (int i = 0; i < mVertices.size(); i += 3) {
+        gsml::Vector3d v1 = mVertices[i].getXYZ();
+        gsml::Vector3d v2 = mVertices[i+1].getXYZ();
+        gsml::Vector3d v3 = mVertices[i+2].getXYZ();
+        gsml::Vector3d baryc = location.barycentricCoordinates(v1, v2, v3);
+
+        std::cout << "baryc: " << baryc.x << "\t" << baryc.y << "\t" << baryc.z << std::endl;
+
+        if (baryc.x >= 0.f && baryc.y >= 0.f && baryc.z >= 0.f && baryc.y + baryc.z <= 1.f) {
+            return Triangle(v1, v2, v3);
+        }
+    }
+
+    return Triangle({0, 0, 0});
+}
+
 void TriangleSurface::readFile(std::string filnavn)
 {
     std::ifstream inn;
