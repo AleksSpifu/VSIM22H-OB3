@@ -42,7 +42,7 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     qDebug() << v[0] <<v[1] << v[3] << v[2];
 
     // Demo
-    surf2 = new TriangleSurface("../VSIM101_H22_Rulleball_0/totrekanter.txt");
+    surf2 = new TriangleSurface("../VSIM101_H22_Rulleball_0/firetrekanter.txt");
     ball = new RollingBall(3);
     dynamic_cast<RollingBall*>(ball)->setSurface(surf2);
 
