@@ -102,7 +102,7 @@ void RenderWindow::init()
     //Qt makes a build-folder besides the project folder. That is why we go down one directory
     // (out of the build-folder) and then up into the project folder.
 
-    mShaderProgram = new Shader("../VSIM101_H22_Rulleball_0/dagvertex.vert", "../VSIM101_H22_Rulleball_0/dagfragment.frag");
+    mShaderProgram = new Shader("../VSIM101_H22_Rulleball_0/myshader.vert", "../VSIM101_H22_Rulleball_0/myshader.frag");
 
     //********************** Making the object to be drawn **********************
 
@@ -114,11 +114,11 @@ void RenderWindow::init()
     //enable the matrixUniform
     // NB: enable in shader and in render() function also to use matrix
     // endret/nytt 23/1
-    mMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "matrix" );
-    mPMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "pmatrix" );
-    mVMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "vmatrix" );
+    mMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "mMatrix" );
+    mPMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "pMatrix" );
+    mVMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "vMatrix" );
     mLightPositionUniform = glGetUniformLocation( mShaderProgram->getProgram(), "light_position" );
-    glBindVertexArray( 0 );
+    glBindVertexArray( 1 );
     surf2->init(mMatrixUniform);
     ball->init(mMatrixUniform);
     xyz.init(mMatrixUniform);
@@ -160,7 +160,7 @@ void RenderWindow::render()
 
     glUniformMatrix4fv( mPMatrixUniform, 1, GL_TRUE, gsmPMatrix->constData());
     glUniformMatrix4fv( mVMatrixUniform, 1, GL_TRUE, gsmVMatrix->constData());
-    glUniform3f(mLightPositionUniform, mLightPosition.x, mLightPosition.y, mLightPosition.z);
+    //glUniform3f(mLightPositionUniform, mLightPosition.x, mLightPosition.y, mLightPosition.z);
     // actual draw call
     // demo
     surf2->draw();
