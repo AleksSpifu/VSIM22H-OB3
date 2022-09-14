@@ -124,6 +124,9 @@ void RenderWindow::init()
     surf2->init(mMatrixUniform);
     ball->init(mMatrixUniform);
     xyz.init(mMatrixUniform);
+
+    Triangle tri = surf2->GetTriangle({5,1,0});
+    std::cout << tri.normal.x << "\t" << tri.normal.y << "\t" << tri.normal.z << std::endl;
 }
 
 ///Called each frame - doing the rendering

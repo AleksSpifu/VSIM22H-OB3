@@ -30,22 +30,35 @@ TriangleSurface::~TriangleSurface()
     //qDebug() << "TriangleSurface::~TriangleSurface() - vertices deleted";
 }
 
-Triangle TriangleSurface::GetTriangle(gsml::Vector3d location) {
-// DOES NOT WORK
+Triangle TriangleSurface::GetTriangle(gsml::Vector3d location)
+{
     for (int i = 0; i < mVertices.size(); i += 3) {
         gsml::Vector3d v1 = mVertices[i].getXYZ();
         gsml::Vector3d v2 = mVertices[i+1].getXYZ();
         gsml::Vector3d v3 = mVertices[i+2].getXYZ();
-        gsml::Vector3d baryc = location.barycentricCoordinates(v1, v2, v3);
 
-        std::cout << "baryc: " << baryc.x << "\t" << baryc.y << "\t" << baryc.z << std::endl;
 
-        if (baryc.x >= 0.f && baryc.y >= 0.f && baryc.z >= 0.f && baryc.y + baryc.z <= 1.f) {
+        if (isPointInTriangle(location, v1, v2, v3)) {
             return Triangle(v1, v2, v3);
         }
     }
 
     return Triangle({0, 0, 0});
+}
+
+bool TriangleSurface::isPointInTriangle(gsml::Vector3d pt, gsml::Vector3d v1, gsml::Vector3d v2, gsml::Vector3d v3)
+{
+    return isCrossproductPositive(pt, v1, v2, v3) && isCrossproductPositive(pt, v3, v1, v2) && isCrossproductPositive(pt, v2, v3, v1);
+}
+
+bool TriangleSurface::isCrossproductPositive(gsml::Vector3d pt, gsml::Vector3d v1, gsml::Vector3d v2, gsml::Vector3d v3)
+{
+    pt.z = 0;
+    v1.z = 0;
+    v2.z = 0;
+    v3.z = 0;
+    gsml::Vector3d crossProduct = (v2-pt).cross((v3-pt));
+    return crossProduct.z > 0;
 }
 
 void TriangleSurface::readFile(std::string filnavn)

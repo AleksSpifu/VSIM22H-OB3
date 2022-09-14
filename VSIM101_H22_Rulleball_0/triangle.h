@@ -9,6 +9,8 @@ struct Triangle {
         gsml::Vector3d v1 = b - a;
         gsml::Vector3d v2 = c - a;
         normal = v1.cross(v2);
+        normal.normalize();
+
     }
     gsml::Vector3d a;
     gsml::Vector3d b;
