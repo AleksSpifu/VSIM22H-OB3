@@ -16,6 +16,7 @@ struct Triangle {
     gsml::Vector3d b;
     gsml::Vector3d c;
     gsml::Vector3d normal;
+    bool valid{true};
 };
 
 #endif // TRIANGLE_H

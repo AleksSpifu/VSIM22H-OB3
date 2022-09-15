@@ -46,7 +46,9 @@ Triangle TriangleSurface::GetTriangle(gsml::Vector3d location)
         }
     }
 
-    return Triangle({0, 0, 0});
+    Triangle tri({0,0,0});
+    tri.valid = false;
+    return tri;
 }
 
 bool TriangleSurface::isPointInTriangle(gsml::Vector3d pt, gsml::Vector3d v1, gsml::Vector3d v2, gsml::Vector3d v3)
@@ -61,7 +63,7 @@ bool TriangleSurface::isCrossproductPositive(gsml::Vector3d pt, gsml::Vector3d v
     v2.z = 0;
     v3.z = 0;
     gsml::Vector3d crossProduct = (v2-pt).cross((v3-pt));
-    return crossProduct.z > 0;
+    return crossProduct.z >= 0;
 }
 
 void TriangleSurface::readFile(std::string filnavn)

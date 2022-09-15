@@ -1,5 +1,5 @@
 #include "rollingball.h"
-
+#include "triangle.h"
 RollingBall::RollingBall(int n) : OctahedronBall (n)
 {
     //mVelocity = gsml::Vector3d{1.0f, 1.0f, -0.05f};
@@ -12,10 +12,31 @@ RollingBall::~RollingBall()
 {
 
 }
+
+gsml::Vector3d RollingBall::GetPosition()
+{
+    return gsml::Vector3d{mPosition(0, 3), mPosition(1, 3), mPosition(2, 3)};
+}
+
 void RollingBall::move(float dt)
 {
-    std::vector<gsml::Vertex>& vertices = dynamic_cast<TriangleSurface*>(triangle_surface)->get_vertices();
+    gsml::Vector3d myPos = GetPosition();
+    Triangle tri = dynamic_cast<TriangleSurface*>(triangle_surface)->GetTriangle(myPos);
+    if (!tri.valid)
+    {
+        return;
+    }
+    gsml::Vector3d newVelocity = mVelocity + (mAcceleration * dt);
+    gsml::Vector3d adjustedSpeed = newVelocity * dt;
 
+    gsml::Vector3d slideAlongNormal = tri.normal * (adjustedSpeed*tri.normal);
+    adjustedSpeed = adjustedSpeed - slideAlongNormal;
+
+    mVelocity = mVelocity + adjustedSpeed;
+
+    std::cout << adjustedSpeed.x << "\t" << adjustedSpeed.y << "\t" << adjustedSpeed.z << std::endl;
+
+    mPosition.translate(adjustedSpeed.x, adjustedSpeed.y, adjustedSpeed.z);
     mMatrix = mPosition * mScale;
 
 }
