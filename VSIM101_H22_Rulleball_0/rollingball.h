@@ -18,5 +18,7 @@ protected:
 private:
     gsml::Vector3d old_normal{0.0, 0.0, 1.0};
     int old_index{0};
+    std::vector<GLuint> mIndices;
+    GLuint mIBO{0};
 };
 #endif // ROLLINGBALL_H

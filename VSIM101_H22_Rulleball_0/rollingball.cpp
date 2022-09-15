@@ -5,6 +5,8 @@ RollingBall::RollingBall(int n) : OctahedronBall (n)
     //mVelocity = gsml::Vector3d{1.0f, 1.0f, -0.05f};
     mPosition.translate(0,2.5,1.25);
     mScale.scale(0.25,0.25,0.25);
+
+    for (GLuint i=0; i<mVertices.size(); i++) mIndices.push_back(i);
 }
 RollingBall::~RollingBall()
 {
@@ -40,6 +42,11 @@ void RollingBall::init(GLint matrixUniform)
    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,  sizeof(gsml::Vertex),  (GLvoid*)(3 * sizeof(GLfloat)) );
    glEnableVertexAttribArray(1);
 
+   glGenBuffers(1, &mIBO);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size()*sizeof(GLuint), mIndices.data(), GL_STATIC_DRAW);
+
+
    glBindVertexArray(0);
 }
 
@@ -47,5 +54,6 @@ void RollingBall::draw()
 {
    glBindVertexArray( mVAO );
    glUniformMatrix4fv( mMatrixUniform, 1, GL_TRUE, mMatrix.constData());
-   glDrawArrays(GL_TRIANGLES, 0, mVertices.size());//mVertices.size());
+   glDrawElements(GL_TRIANGLES, mVertices.size(), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));//mVertices.size());
+
 }
