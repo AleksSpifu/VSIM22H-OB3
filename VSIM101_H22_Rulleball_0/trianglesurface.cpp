@@ -14,6 +14,8 @@ TriangleSurface::TriangleSurface() : VisualObject()
     v.set_xyz(0,0,0); v.set_rgb(0,1,0); mVertices.push_back(v);
     v.set_xyz(0.5,0.5,0); v.set_rgb(1,0,0); mVertices.push_back(v);
     v.set_xyz(0,0.5,0); v.set_rgb(0,0,1); mVertices.push_back(v);
+
+    for (GLuint i=0; i<mVertices.size(); i++) mIndices.push_back(i);
 }
 
 TriangleSurface::TriangleSurface(std::string filnavn) : VisualObject()
@@ -21,6 +23,7 @@ TriangleSurface::TriangleSurface(std::string filnavn) : VisualObject()
     readFile(filnavn);
     //mMatrix.setToIdentity();
     //mMatrix.translate(0,0,5);
+    for (GLuint i=0; i<mVertices.size(); i++) mIndices.push_back(i);
 }
 
 TriangleSurface::~TriangleSurface()
@@ -126,15 +129,19 @@ void TriangleSurface::init(GLint matrixUniform)
 
     //enable the matrixUniform
     // mMatrixUniform = glGetUniformLocation( matrixUniform, "matrix" );
+    glGenBuffers(1, &mIBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size()*sizeof(GLuint), mIndices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(0);
 }
 
 void TriangleSurface::draw()
 {
+    initializeOpenGLFunctions();
     glBindVertexArray( mVAO );
-    glUniformMatrix4fv( mMatrixUniform, 1, GL_TRUE, mMatrix.constData());
-    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());//mVertices.size());
+    glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
+    glDrawElements(GL_TRIANGLES, mVertices.size(), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
 
 }
 

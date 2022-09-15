@@ -22,6 +22,8 @@ public:
     Triangle GetTriangle(gsml::Vector3d location);
     bool isPointInTriangle(gsml::Vector3d pt, gsml::Vector3d v1, gsml::Vector3d v2, gsml::Vector3d v3);
     bool isCrossproductPositive(gsml::Vector3d pt, gsml::Vector3d v1, gsml::Vector3d v2, gsml::Vector3d v3);
+    std::vector<GLuint> mIndices;
+    GLuint mIBO{0};
 };
 
 #endif // TRIANGLESURFACE_H
