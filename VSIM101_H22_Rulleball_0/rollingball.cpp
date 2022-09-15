@@ -3,7 +3,7 @@
 RollingBall::RollingBall(int n) : OctahedronBall (n)
 {
     //mVelocity = gsml::Vector3d{1.0f, 1.0f, -0.05f};
-    mPosition.translate(0,2.5,1.25);
+    mPosition.translate(0,25,10.25);
     mScale.scale(0.25,0.25,0.25);
 
     for (GLuint i=0; i<mVertices.size(); i++) mIndices.push_back(i);
@@ -26,17 +26,19 @@ void RollingBall::move(float dt)
     {
         return;
     }
-    gsml::Vector3d newVelocity = mVelocity + (mAcceleration * dt);
-    gsml::Vector3d adjustedSpeed = newVelocity * dt;
 
-    gsml::Vector3d slideAlongNormal = tri.normal * (adjustedSpeed*tri.normal);
-    adjustedSpeed = adjustedSpeed - slideAlongNormal;
+    mVelocity = mVelocity + (mAcceleration * dt);
 
-    mVelocity = mVelocity + adjustedSpeed;
+    gsml::Vector3d slideAlongNormal = tri.normal * (mVelocity*tri.normal);
+    mVelocity = mVelocity - slideAlongNormal;
 
-    std::cout << adjustedSpeed.x << "\t" << adjustedSpeed.y << "\t" << adjustedSpeed.z << std::endl;
+    //mVelocity = mVelocity + adjustedSpeed;
 
-    mPosition.translate(adjustedSpeed.x, adjustedSpeed.y, adjustedSpeed.z);
+    //std::cout << adjustedSpeed.x << "\t" << adjustedSpeed.y << "\t" << adjustedSpeed.z << std::endl;
+
+    gsml::Vector3d newVelocity = mVelocity * dt;
+
+    mPosition.translate(newVelocity.x, newVelocity.y, newVelocity.z);
     mMatrix = mPosition * mScale;
 
 }
