@@ -42,6 +42,11 @@ Triangle TriangleSurface::GetTriangle(gsml::Vector3d location)
 
 
         if (isPointInTriangle(location, v1, v2, v3)) {
+            if (i == 6) {
+                Triangle out(v1, v2, v3);
+                out.friction = 0.98;
+                return out;
+            }
             return Triangle(v1, v2, v3);
         }
     }
@@ -51,12 +56,22 @@ Triangle TriangleSurface::GetTriangle(gsml::Vector3d location)
     return tri;
 }
 
-bool TriangleSurface::isPointInTriangle(gsml::Vector3d pt, gsml::Vector3d v1, gsml::Vector3d v2, gsml::Vector3d v3)
+bool TriangleSurface::isPointInTriangle(
+        gsml::Vector3d pt,
+        gsml::Vector3d v1,
+        gsml::Vector3d v2,
+        gsml::Vector3d v3)
 {
-    return isCrossproductPositive(pt, v1, v2, v3) && isCrossproductPositive(pt, v3, v1, v2) && isCrossproductPositive(pt, v2, v3, v1);
+    return isCrossproductPositive(pt, v1, v2, v3)
+            && isCrossproductPositive(pt, v3, v1, v2)
+            && isCrossproductPositive(pt, v2, v3, v1);
 }
 
-bool TriangleSurface::isCrossproductPositive(gsml::Vector3d pt, gsml::Vector3d v1, gsml::Vector3d v2, gsml::Vector3d v3)
+bool TriangleSurface::isCrossproductPositive(
+        gsml::Vector3d pt,
+        gsml::Vector3d v1,
+        gsml::Vector3d v2,
+        gsml::Vector3d v3)
 {
     pt.z = 0;
     v1.z = 0;

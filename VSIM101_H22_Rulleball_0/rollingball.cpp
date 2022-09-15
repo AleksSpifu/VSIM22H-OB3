@@ -31,10 +31,7 @@ void RollingBall::move(float dt)
 
     gsml::Vector3d slideAlongNormal = tri.normal * (mVelocity*tri.normal);
     mVelocity = mVelocity - slideAlongNormal;
-
-    //mVelocity = mVelocity + adjustedSpeed;
-
-    //std::cout << adjustedSpeed.x << "\t" << adjustedSpeed.y << "\t" << adjustedSpeed.z << std::endl;
+    mVelocity = mVelocity * tri.friction;
 
     gsml::Vector3d newVelocity = mVelocity * dt;
 

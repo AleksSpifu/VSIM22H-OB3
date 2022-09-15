@@ -4,7 +4,8 @@
 
 
 struct Triangle {
-    Triangle(gsml::Vector3d A, gsml::Vector3d B, gsml::Vector3d C) : a{A}, b{B}, c{C}
+    Triangle(gsml::Vector3d A, gsml::Vector3d B, gsml::Vector3d C)
+        : a{A}, b{B}, c{C}, friction{0.999}
     {
         gsml::Vector3d v1 = b - a;
         gsml::Vector3d v2 = c - a;
@@ -16,6 +17,7 @@ struct Triangle {
     gsml::Vector3d b;
     gsml::Vector3d c;
     gsml::Vector3d normal;
+    float friction;
     bool valid{true};
 };
 
