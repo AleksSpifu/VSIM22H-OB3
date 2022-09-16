@@ -17,7 +17,7 @@
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     : mContext(nullptr), mInitialized(false), mMainWindow(mainWindow)
 {
-    help.x = 5; help.y = -5; help.z = 3;
+    help.x = 37; help.y = -30; help.z = 50;
     mLightPosition.x = 5.2f;
     mLightPosition.y = 5.2f;
     mLightPosition.z = 2.0f;
@@ -42,7 +42,7 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     qDebug() << v[0] <<v[1] << v[3] << v[2];
 
     // Demo
-    surf2 = new TriangleSurface("../VSIM101_H22_Rulleball_0/totrekanter.txt");
+    surf2 = new TriangleSurface("../VSIM101_H22_Rulleball_0/firetrekanter.txt");
     ball = new RollingBall(3);
     dynamic_cast<RollingBall*>(ball)->setSurface(surf2);
 
@@ -75,6 +75,8 @@ void RenderWindow::init()
         return;
     }
 
+
+
     //just to make sure we don't init several times
     //used in exposeEvent()
     if (!mInitialized)
@@ -102,7 +104,7 @@ void RenderWindow::init()
     //Qt makes a build-folder besides the project folder. That is why we go down one directory
     // (out of the build-folder) and then up into the project folder.
 
-    mShaderProgram = new Shader("../VSIM101_H22_Rulleball_0/dagvertex.vert", "../VSIM101_H22_Rulleball_0/dagfragment.frag");
+    mShaderProgram = new Shader("../VSIM101_H22_Rulleball_0/myshader.vert", "../VSIM101_H22_Rulleball_0/myshader.frag");
 
     //********************** Making the object to be drawn **********************
 
@@ -114,14 +116,17 @@ void RenderWindow::init()
     //enable the matrixUniform
     // NB: enable in shader and in render() function also to use matrix
     // endret/nytt 23/1
-    mMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "matrix" );
-    mPMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "pmatrix" );
-    mVMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "vmatrix" );
+    mMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "mMatrix" );
+    mPMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "pMatrix" );
+    mVMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "vMatrix" );
     mLightPositionUniform = glGetUniformLocation( mShaderProgram->getProgram(), "light_position" );
-    glBindVertexArray( 0 );
+    glBindVertexArray( 1 );
     surf2->init(mMatrixUniform);
     ball->init(mMatrixUniform);
     xyz.init(mMatrixUniform);
+
+    Triangle tri = surf2->GetTriangle({5,1,0});
+    std::cout << tri.normal.x << "\t" << tri.normal.y << "\t" << tri.normal.z << std::endl;
 }
 
 ///Called each frame - doing the rendering
@@ -148,19 +153,19 @@ void RenderWindow::render()
     gsmVMatrix->setToIdentity();
     //gsmPMatrix->frustum(-0.25,0.25,-0.25,0.25,0.1,1.5);
     //gsmPMatrix->frustum(-0.3,0.3,-0.2,0.2,0.1,10);
-    gsmPMatrix->perspective(60, 4.0/3.0, 0.1, 10.0);
+    gsmPMatrix->perspective(60, 4.0/3.0, 0.1, 100.0);
     //gsmPMatrix->print();
     //qDebug() << *mPMatrix;
     //gsmVMatrix->rotate(help, 0, 1, 0); help +=1;
     //gsml::Vector3d eye{2.5,2.5,2};
     gsml::Vector3d eye{help.x,help.y,help.z};
-    gsml::Vector3d at{0 ,0 , 0};
+    gsml::Vector3d at = ball->GetPosition();
     gsml::Vector3d up{0,0,1};
     gsmVMatrix->lookAt(eye, at, up);
 
     glUniformMatrix4fv( mPMatrixUniform, 1, GL_TRUE, gsmPMatrix->constData());
     glUniformMatrix4fv( mVMatrixUniform, 1, GL_TRUE, gsmVMatrix->constData());
-    glUniform3f(mLightPositionUniform, mLightPosition.x, mLightPosition.y, mLightPosition.z);
+    //glUniform3f(mLightPositionUniform, mLightPosition.x, mLightPosition.y, mLightPosition.z);
     // actual draw call
     // demo
     surf2->draw();
@@ -169,6 +174,7 @@ void RenderWindow::render()
     // checkForGLerrors() because that takes a long time
     // and before swapBuffers(), else it will show the vsync time
     calculateFramerate();
+
 
     // using our expanded OpenGL debugger to check if everything is OK.
     // checkForGLerrors();
