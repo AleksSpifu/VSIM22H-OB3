@@ -31,5 +31,8 @@
 *.out
 *.app
 
+*LAStools
+*Kartdata
+
 *.user
 build*/
